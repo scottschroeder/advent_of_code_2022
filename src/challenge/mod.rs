@@ -2,6 +2,7 @@ use anyhow::{anyhow as ah, Context, Result};
 use std::{fs, io::Read, path};
 
 mod day1;
+mod day2;
 
 pub fn run(args: &clap::ArgMatches) -> Result<()> {
     let day = args.value_of("day").unwrap().parse::<u32>()?;
@@ -11,6 +12,8 @@ pub fn run(args: &clap::ArgMatches) -> Result<()> {
     let result = match (day, part) {
         (1, 1) => day1::part1(&input),
         (1, 2) => day1::part2(&input),
+        (2, 1) => day2::part1(&input),
+        (2, 2) => day2::part2(&input),
         (d, p) => Err(ah!("unimplemented challenge day {} part {}", d, p)),
     }?;
     println!("{}", result);
