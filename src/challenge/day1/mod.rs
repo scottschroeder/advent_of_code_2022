@@ -5,13 +5,23 @@ use anyhow::{Context, Result};
 pub fn part1(input: &str) -> Result<String> {
     let content = parse_input(input)?;
     log::debug!("{:?}", content);
-    let largest = content.iter().map(|elf| elf.iter().sum::<i64>()).max().unwrap();
+    let largest = content
+        .iter()
+        .map(|elf| elf.iter().sum::<i64>())
+        .max()
+        .unwrap();
     Ok(format!("{:?}", largest))
 }
 
 pub fn part2(input: &str) -> Result<String> {
-    let x = 0;
-    Ok(format!("{:?}", x))
+    let content = parse_input(input)?;
+    let mut totals = content
+        .iter()
+        .map(|elf| elf.iter().sum::<i64>())
+        .collect::<Vec<_>>();
+    totals.sort();
+    let top = totals.iter().rev().take(3).sum::<i64>();
+    Ok(format!("{:?}", top))
 }
 
 fn parse(input: &str) -> Result<Vec<i64>> {
@@ -60,10 +70,14 @@ mod tests {
     }
     #[test]
     fn verify_p2() {
-        assert_eq!(part2(INPUT).unwrap().as_str(), "0")
+        assert_eq!(part2(INPUT).unwrap().as_str(), "208191")
     }
     #[test]
     fn part1_ex() {
         assert_eq!(part1(EX).unwrap().as_str(), "24000")
+    }
+    #[test]
+    fn part2_ex() {
+        assert_eq!(part2(EX).unwrap().as_str(), "45000")
     }
 }
