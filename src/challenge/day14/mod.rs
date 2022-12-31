@@ -28,7 +28,8 @@ fn count_falling_grains(mut grid: WallGrid, input: &str) -> Result<usize> {
     }
     grid.calculate_floor();
     let mut c = 0;
-    while let Some(grain) = sand_fall(&grid, Point::new(500, 0)) {
+    let mut path = vec![Point::new(500, 0)];
+    while let Some(grain) = sand_fall(&grid, &mut path) {
         if grid.add_sand(grain) {
             log::debug!("add {}\n{}", grain, grid.grid);
             c += 1;
@@ -62,18 +63,19 @@ fn parse_point(input: &str) -> Result<Point> {
     Ok(Point::new(x, y))
 }
 
-fn sand_fall(grid: &WallGrid, src: Point) -> Option<Point> {
+fn sand_fall(grid: &WallGrid, path: &mut Vec<Point>) -> Option<Point> {
     const FALL_PRIORITY: &[Point] = &[Point::new(0, 1), Point::new(-1, 1), Point::new(1, 1)];
-    let mut grain = src;
+    let mut grain = path.last().cloned()?;
     while !grid.in_abyss(&grain) {
         if let Some(fall) = FALL_PRIORITY
             .iter()
             .map(|d| grain + *d)
             .find(|p| grid.is_open(p))
         {
+            path.push(fall);
             grain = fall
         } else {
-            return Some(grain);
+            return path.pop();
         }
     }
     None
