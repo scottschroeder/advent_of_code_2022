@@ -13,6 +13,7 @@ clap = "2.33.3"
 anyhow = "1.0"
 color-backtrace = { version = "0.4" }
 # rayon = "1.5.0"
+petgraph = "0.6.2"
 
 
 log = "0.4"

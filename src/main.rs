@@ -1,4 +1,4 @@
-use anyhow::{anyhow as ah, Result};
+use anyhow::Result;
 
 mod challenge;
 
@@ -10,7 +10,10 @@ fn main() -> Result<()> {
 
     challenge::run(&args).map_err(|e| {
         log::error!("{}", e);
-        ah!("unrecoverable failure")
+        e.chain()
+            .skip(1)
+            .for_each(|cause| log::error!("because: {}", cause));
+        anyhow::anyhow!("unrecoverable failure")
     })
 }
 fn setup_logger(level: u64) {
